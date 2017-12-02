@@ -1,0 +1,23 @@
+bangl1 <- read.csv(file="bangl1.csv", header=TRUE, sep=",")
+
+fitbangl1<- nls(
+  An~alpha*I*(1-beta*I)/(1+alpha*I/Pmax)-Rd,
+  bangl1,
+  start=list(alpha=0.04, beta=0.0001,Pmax=22.8, Rd=-1.38),
+  trace=T
+)
+
+summary(fitbangl1)
+
+#New value of alpha,beta,Pmax,Rd and gama should be reassigned simultaneously
+#gama=alpha/Pmax
+#The value of gama should be assigned after alpha and Pmax have been reassinged!
+
+Pn_I_Ye_F <- function(I) alpha*I*(1-beta*I)/(1+alpha*I/Pmax)-Rd
+plot(Pn_I_Ye_F, 0,2000, ylim=c(0,25),
+     xlab=expression(paste("光合有效辐射PAR  ","umol m"^"-2 ","s"^"-1")),
+     ylab=expression(paste("净光合速率Pn  ","umol m"^"-2 ","s"^"-1")),
+     main="光合作用光响应曲线",lwd=2)
+par(new=T)
+plot(bangl1$I,bangl1$An,col='red1',xlim=c(0,2000), ylim=c(0,25),xlab='',ylab='',lwd=2)
+
